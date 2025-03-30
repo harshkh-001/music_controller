@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Music Control</title>
+    <script>
+        async function createRoom() {
+            let vote_to_skip = document.getElementById("vts").value
+            let response = await fetch('/create-room', { method: 'POST', headers:{'Content-Type': 'application/json'}, body:JSON.stringify({ vote_to_skip: vote_to_skip }) });
+            if (response.ok) {
+                let data = await response.json();
+                document.getElementById("room-code").innerText = "Room Code: " + data.room_code;
+            } else {
+                document.getElementById("room-code").innerText = "Error creating room";
+            }
+        }
+        
+        async function joinRoom() {
+            let code = document.getElementById("room-input").value;
+            let response = await fetch('/join-room', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code: code })
+            });
+            let data = await response.json();
+            if (data.error) alert(data.error);
+            else alert("Joined Room: " + data.room);
+        }
+    </script>
+</head>
+<body>
+    <h1>Music Control</h1>
+    <input type="number" id="vts" placeholder="Vote TO Skip" min="1" required>
+    <button onclick="createRoom()">Create Room</button>
+    <p id="room-code"></p>
+    <input type="text" id="room-input" placeholder="Enter Room Code">
+    <button onclick="joinRoom()">Join Room</button>
+</body>
+</html>
