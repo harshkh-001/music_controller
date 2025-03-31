@@ -1,14 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Room</title>
+    <script>
+        async function createRoom() {
+            try {
+                let vote_to_skip = document.getElementById("vts").value;
+                
+                let response = await fetch('/create-room', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ vote_to_skip: vote_to_skip })
+                });
+        
+                if (!response.ok) {
+                    throw new Error("Error creating room"); // Throw an error if the response is not OK
+                }
+        
+                let data = await response.json();
+                window.location.href = `/room/${data.room_code}`;
+            } catch (err) {
+                window.alert(err.message); // Proper error handling
+            }
+        }        
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+        }
+        h1 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-    <h1>Create Room</h1>
-    <form action="/create-room" method="post">
-        <label for="vote_to_skip">Votes Required to Skip:</label>
-        <input type="number" id="vote_to_skip" name="vote_to_skip" min="1" required>
-        <button type="submit">Create Room</button>
-    </form>
+    <div class="container">
+        <h1>Create Room</h1>
+        <form>
+            <label for="vote_to_skip">Votes Required to Skip:</label>
+            <input type="number" id="vts" name="vote_to_skip" min="1" required>
+            <button type="button" onclick="createRoom()">Create Room</button>
+        </form>
+    </div>
 </body>
 </html>

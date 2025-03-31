@@ -15,22 +15,71 @@
         }
         
         async function joinRoom() {
-            let code = document.getElementById("room-input").value;
-            let response = await fetch('/join-room', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ code: code })
-            });
-            let data = await response.json();
-            if (data.error) alert(data.error);
-            else alert("Joined Room: " + data.room);
+            let code = document.getElementById("room-input").value.toUpperCase();
+            console.log(code) ;
+            window.location.href=`/room/${code}` ;
         }
     </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+        }
+        h1 {
+            position: absolute ;
+            top: 10px ;
+            color: #33;
+        }
+        input::placeholder{
+            color: red ;
+        }
+        input {
+            width: 45%;
+            color: red ;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            width: 45%;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        p {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
 </head>
 <body>
     <h1>Music Control</h1>
-    <input type="number" id="vts" placeholder="Vote TO Skip" min="1" required>
-    <button onclick="createRoom()">Create Room</button>
+    <button onclick="window.location.href = '/create'">Create Room</button>
     <p id="room-code"></p>
     <input type="text" id="room-input" placeholder="Enter Room Code">
     <button onclick="joinRoom()">Join Room</button>

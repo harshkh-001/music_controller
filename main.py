@@ -22,7 +22,11 @@ class Room(db.Model):
     host = db.Column(db.String(50), nullable=False)
 
 def generate_room_code():
-    return ''.join(random.choices(string.ascii_uppercase, k=6))
+    while True:
+        code = ''.join(random.choices(string.ascii_uppercase, k=6))
+        exist_room = Room.query.filter_by(code=code).first()
+        if not (exist_room):
+            return code
 
 @app.route("/")
 def home():
@@ -43,6 +47,21 @@ def create_room():
     db.session.add(new_room)
     db.session.commit()
     return jsonify({"room_code": room_code})
+
+@app.route("/room/<roomcode>")
+def room(roomcode):
+    room = Room.query.filter_by(code=roomcode).first()
+    if(room):
+        print(room.votes_to_skip)
+        roomdata = {
+            "room_code":room.code,
+            "Vote_to_skip":room.votes_to_skip,
+            "current_song":room.current_song ,
+            "host":room.host
+        }
+        return render_template("room.html",room=roomdata)
+     
+    return "error in finding room pls enter correct room code"
 
 @app.route("/join-room", methods=["POST"])
 def join_room():
