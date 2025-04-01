@@ -88,7 +88,6 @@ def create():
 def create_room():
     vote_to_skip = request.json.get('vote_to_skip')
     session["host"] = request.remote_addr  # Track host IP
-    current_song = song_name
     room_code = generate_room_code()
     new_room = Room(code=room_code, votes_to_skip=int(vote_to_skip), host=session["host"])
     new_room_votes = Votes(code=room_code)
