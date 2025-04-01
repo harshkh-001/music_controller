@@ -5,11 +5,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Room {{room.room_code}}</title>
 </head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #1e1e2e;
+        color: #ffffff;
+        text-align: center;
+        padding: 20px;
+    }
+    h1 {
+        font-size: 2em;
+        color: #ffcc00;
+    }
+    p {
+        font-size: 1.2em;
+        margin: 10px 0;
+    }
+    button {
+        background-color: #ff5733;
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        font-size: 1.2em;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    button:hover {
+        background-color: #ff2e00;
+    }
+    .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #2e2e3e;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    }
+</style>
+<script>
+    async function Voted() {    
+        try {
+            let roomCode = "{{ room.room_code }}";  // ✅ Get `room_code` from Flask template
+    
+            let response = await fetch('/inc-vote', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    room_Code: roomCode  // ✅ Corrected
+                })
+            });
+            console.log(response)
+            let data = await response.json();
+            console.log("Server Response:", data);
+            document.getElementById("current_votes").innerText = "Current Votes : "+ data.current_votes ;
+    
+            if (response.ok) {
+                window.alert("Succesfull Voted") // ✅ Refresh to show updated vote count
+            } else {
+                alert("Error: " + response.error);
+            }
+        } catch (err) {
+            alert("Request failed: " + err.message);
+        }
+    }
+    
+</script>
 <body>
     <h1>Welcome to Room {{ room.room_code }}</h1>
     <p>Room Code: {{room.room_code}}</p>
     <p>Host: {{ room.host }}</p>
     <p>Votes to Skip: {{room.Vote_to_skip}}</p>
     <p>Song : {{room.current_song}}</p>
+    <p id="current_votes">Current Votes : {{room.current_votes}}</p>
+    <button onclick="Voted()">Vote To Change Current Song</button>
 </body>
 </html>
